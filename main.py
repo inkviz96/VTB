@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routing import authorization
+from routing import authorization, datasets
 
 
 app = FastAPI(openapi_url="/api/v1/openapi.json",
@@ -11,3 +11,4 @@ app = FastAPI(openapi_url="/api/v1/openapi.json",
               debug=False)
 
 app.include_router(authorization.router)
+app.include_router(datasets.router)
