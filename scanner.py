@@ -41,7 +41,7 @@ def chek_new_transactions():
             for bill in bills:
                 check_bill(bill_id=bill.id)
     except:
-        print('Buy limc token transaction is None')
+        print('Transaction is None')
 
 
 if __name__ == '__main__':

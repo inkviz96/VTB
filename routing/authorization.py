@@ -6,9 +6,10 @@ from database.models import Dataset, User
 router = APIRouter(prefix="/api/v1")
 
 
-@router.get("/profile/{user_id}/", tags=["authorization"], status_code=200)
-async def profile(user_id: str):
-    ds = session.query(Dataset).filter_by(user_id=int(user_id))
+@router.get("/profile/{mail}/", tags=["authorization"], status_code=200)
+async def profile(mail: str):
+    user = session.query(User).filter_by(mail=mail).first()
+    ds = session.query(Dataset).filter_by(user_id=int(user.id))
     all_dataset = []
     for dataset in ds:
         all_dataset.append({
