@@ -5,6 +5,7 @@ from database.db import session
 from database.models import Dataset
 import json
 
+
 router = APIRouter(prefix="/api/v1")
 
 
@@ -78,14 +79,14 @@ def get_dataset(session, dataset_type: str, dataset_name: str):
         }
     }""" % (dataset_type, dataset_name)}
     response = session.post("http://datahub.yc.pbd.ai:9002/api/graphql", json=data)
-    return JSONResponse(content=response.text, status_code=status.HTTP_200_OK)
+    return json.loads(response.text)
 
 
 @router.post("/create/", status_code=200)
 async def create():
     for x in range(10):
         try:
-            session.add(Dataset(name='name', url='https/', status='Done', sell=True, price=x))
+            session.add(Dataset(name='name', status='Done/', data={'some': 'json'}, sell=True, price=x))
             session.commit()
         except:
             session.rollback()
@@ -99,9 +100,9 @@ async def dataset_list():
     for data in data_list:
         datasets[data.id] = {
             'name': data.name,
-            'url': data.url,
             'status': data.status,
+            'data': data.data,
             'sell': data.sell,
             'price': data.price
         }
-    return JSONResponse(content=json.dumps(datasets), status_code=status.HTTP_200_OK)
+    return JSONResponse(content=datasets, status_code=status.HTTP_200_OK)

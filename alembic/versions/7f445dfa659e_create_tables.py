@@ -1,16 +1,16 @@
 """create tables
 
-Revision ID: 5c6d4f826a6c
+Revision ID: 7f445dfa659e
 Revises: 
-Create Date: 2021-10-09 09:23:18.380277
+Create Date: 2021-10-09 10:13:59.934780
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '5c6d4f826a6c'
+revision = '7f445dfa659e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,7 +26,8 @@ def upgrade():
     op.create_table('dataset',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.VARCHAR(length=255), nullable=False),
-    sa.Column('url', sa.VARCHAR(length=255), nullable=False),
+    sa.Column('status', sa.VARCHAR(length=255), nullable=False),
+    sa.Column('data', postgresql.JSON(astext_type=sa.Text()), nullable=False),
     sa.Column('sell', sa.BOOLEAN(), nullable=False),
     sa.Column('price', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
