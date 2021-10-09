@@ -9,7 +9,7 @@ import json
 router = APIRouter(prefix="/api/v1")
 
 
-@router.get("/dataset_list", status_code=200)
+@router.get("/dataset_list", tags=["datasets"], status_code=200)
 async def dataset_list():
     """
     Получение всех datasets
@@ -83,7 +83,7 @@ def get_dataset(session, dataset_type: str, dataset_name: str):
     return json.loads(response.text)
 
 
-@router.post("/create/", status_code=200)
+@router.post("/create/", tags=["datasets"], status_code=200)
 async def create():
     """
     Create testing users datasets
@@ -97,7 +97,7 @@ async def create():
     return JSONResponse(status_code=status.HTTP_200_OK)
 
 
-@router.get("/users_dataset_list/", status_code=200)
+@router.get("/users_dataset_list/", tags=["datasets"], status_code=200)
 async def users_dataset_list():
     """
     Users Dataset list for sell
