@@ -13,7 +13,7 @@ dramatiq.set_broker(broker)
 
 
 def check_bill(bill_id):
-    token = "YOUR_TOKEN"
+    token = "C143D36E78923BE"
     client = Client(token)
     bill = session.query(Bill).filter_by(id=bill_id)
     history = client.operation_history(label=bill.receipt)
