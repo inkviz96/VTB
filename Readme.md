@@ -11,3 +11,7 @@ docker-compose up -d --build
 - Sqlalchemy
 - Docker
 - Alembic
+
+### Дополнительно
+Порт можно поменять в .env \
+При ошибках alembic убрать --autogenerate
