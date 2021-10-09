@@ -83,10 +83,9 @@ def get_dataset(session, dataset_type: str, dataset_name: str):
 
 @router.post("/create/", status_code=200)
 async def create():
-
     for x in range(10):
         try:
-            session.add(Dataset(name='name', url='https/', sell=True, price=x))
+            session.add(Dataset(name='name', url='https/', status='Done', sell=True, price=x))
             session.commit()
         except:
             session.rollback()
@@ -101,6 +100,7 @@ async def dataset_list():
         datasets[data.id] = {
             'name': data.name,
             'url': data.url,
+            'status': data.status,
             'sell': data.sell,
             'price': data.price
         }

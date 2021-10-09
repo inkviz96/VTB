@@ -11,6 +11,7 @@ class Dataset(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(VARCHAR(255), nullable=False)
+    url = Column(VARCHAR(255), nullable=False)
     status = Column(JSON, nullable=False)
     sell = Column(BOOLEAN, nullable=False)
     price = Column(Integer, nullable=False)
