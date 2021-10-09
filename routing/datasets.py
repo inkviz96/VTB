@@ -133,7 +133,7 @@ async def join_dataset(connect):
     Объединение запрашиваемых dataset
     """
     result = {}
-    datasets = {
+    datasets = {        # Будет формироваться исходя из данных с фронта
         'hive': ('SampleHiveDataset', 'fct_users_created', 'fct_users_deleted', 'logging_events'),
         'hdfs': ('SampleHdfsDataset',),
         'kafka': ('SampleKafkaDataset',)
@@ -142,6 +142,27 @@ async def join_dataset(connect):
         type_list = {dataset_type: []}
         for name in dataset_name:
             response = get_dataset(connect, dataset_type, name)
-            type_list[dataset_type].append(response)
+            is_suitable = await filter_by_tag(
+                dataset_tags=response["data"]["dataset"]["tags"],
+                user_tags=('test',)     # Тестовый вариант, теги будут приходить с фронта
+            )
+            if is_suitable:
+                type_list[dataset_type].append(response)
         result[dataset_type] = (type_list[dataset_type])
     return result
+
+
+async def filter_by_tag(dataset_tags, user_tags=None):
+    """
+    Фильтрация dataset по тегам указаным пользователем
+    :param dataset_tags: теги присутствующие в датасет
+    :param user_tags: пользовательские теги
+    :return: соответствие (Boolean)
+    """
+    if not user_tags:
+        return True
+    if dataset_tags:
+        for tag in dataset_tags["tags"]:
+            if tag["tag"]["name"] in user_tags:
+                return True
+    return False
