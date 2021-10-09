@@ -11,7 +11,8 @@ router = APIRouter(prefix="/api/v1")
 
 @router.get("/dataset_list", status_code=200)
 async def dataset_list():
-    """ Получение всех datasets
+    """
+    Получение всех datasets
     """
     session = requests.Session()
     data = {"username": "datahub", "password": "datahub"}
@@ -84,6 +85,9 @@ def get_dataset(session, dataset_type: str, dataset_name: str):
 
 @router.post("/create/", status_code=200)
 async def create():
+    """
+    Create testing users datasets
+    """
     for x in range(10):
         try:
             session.add(Dataset(name='name', status='Done/', data={'some': 'json'}, sell=True, price=x))
@@ -95,6 +99,9 @@ async def create():
 
 @router.get("/users_dataset_list/", status_code=200)
 async def dataset_list():
+    """
+    Users Dataset list for sell
+    """
     data_list = session.query(Dataset).filter_by(sell=True)
     datasets = {}
     for data in data_list:
