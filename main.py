@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routing import authorization, datasets
+from routing import authorization, datasets, shop
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -31,3 +31,4 @@ app.add_middleware(
 
 app.include_router(authorization.router)
 app.include_router(datasets.router)
+app.include_router(shop.router)
