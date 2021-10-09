@@ -8,25 +8,25 @@ from yoomoney import Authorize
 from yoomoney import Client
 from yoomoney import Quickpay
 
-Authorize(
-      client_id="0856F742C08EAD9603B3DCC0007B1F21CDD8107242926232F",
-      redirect_uri="http://0.0.0.0:8080",
-      scope=["account-info",
-             "operation-history",
-             "operation-details",
-             "incoming-transfers",
-             "payment-p2p",
-             "payment-shop",
-             ]
-      )
-
+# auth_token = Authorize(
+#       client_id="0856F742C08EAD9603B3DCC0007B1F21CDD8107242926232FC143D36E78923BE",
+#       redirect_uri="http://0.0.0.0:8080",
+#       scope=["account-info",
+#              "operation-history",
+#              "operation-details",
+#              "incoming-transfers",
+#              "payment-p2p",
+#              "payment-shop",
+#              ]
+#       )
+auth_token = ''
 
 router = APIRouter(prefix="/api/v1")
 
 
 @router.post("buy_request", status_code=200)
 async def buy_request(dataset_id: int, amount: int, user_id: int):
-    token = "C143D36E78923BE"
+    token = auth_token
     client = Client(token)
     user = client.account_info()
     if user.balance < amount:

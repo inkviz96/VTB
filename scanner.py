@@ -6,6 +6,7 @@ from dramatiq.brokers.rabbitmq import RabbitmqBroker
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.executors.pool import ProcessPoolExecutor
 import dramatiq
+from routing.shop import auth_token
 
 broker = RabbitmqBroker(url='amqp://vtb:vtb@rabbitmq:5672/vtb')
 
@@ -13,20 +14,20 @@ dramatiq.set_broker(broker)
 
 
 def check_bill(bill_id):
-    token = "C143D36E78923BE"
+    token = auth_token
     client = Client(token)
     bill = session.query(Bill).filter_by(id=bill_id)
     history = client.operation_history(label=bill.receipt)
     for operation in history.operations:
         if operation.status == 'success':
-            dataset = session.query(Dataset).filter_by(id=bill.dataset_id)
+            dataset = session.query(Dataset).filter_by(id=bill.dataset_pk)
             session.delete(bill)
             session.add(Dataset(name=dataset.name,
                                 status=dataset.status,
                                 data=dataset.data,
                                 sell=dataset.sell,
                                 price=dataset.price))
-            user = session.query(User).filter_by(id=bill.user_id)
+            user = session.query(User).filter_by(id=bill.user_pk)
             session.query(dataset).join(user)
             session.commit()
 

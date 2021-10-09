@@ -30,5 +30,5 @@ class Bill(Base):
 
     id = Column(Integer, primary_key=True)
     receipt = Column(VARCHAR(255), nullable=False)
-    dataset_id = Column(Integer, nullable=False)
-    user_id = Column(Integer, nullable=False)
+    dataset_pk = Column(Integer, nullable=False)
+    user_pk = Column(Integer, nullable=False)

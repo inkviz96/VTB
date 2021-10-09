@@ -25,6 +25,7 @@ importlib-metadata==4.8.1
 importlib-resources==5.2.2
 Mako==1.1.5
 MarkupSafe==2.0.1
+pika==1.2.0
 prometheus-client==0.11.0
 protobuf==3.18.1
 psycopg2==2.9.1
