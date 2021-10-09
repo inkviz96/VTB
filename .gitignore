@@ -1,1 +1,5 @@
 .postgres
+ __pycache__/
+ *.pyc
+ env/
+ routing/__pycache__/

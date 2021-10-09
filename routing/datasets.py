@@ -36,6 +36,9 @@ def get_dataset(connect, dataset_type: str, dataset_name: str):
         dataset(urn: "urn:li:dataset:(urn:li:dataPlatform:%s,%s,PROD)"){
             urn
             name
+            properties {
+                description
+            }
             tags {
                 tags {
                     tag {
@@ -60,7 +63,12 @@ def get_dataset(connect, dataset_type: str, dataset_name: str):
                 }
                 primaryKeys
                 foreignKeys {
+                  foreignFields {
+                    fieldPath
+                  }
+                  foreignDataset {
                     name
+                  }
                 }
             }
         }
