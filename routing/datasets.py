@@ -119,7 +119,7 @@ async def users_dataset_list():
 
 
 @router.post("/new_dataset/", tags=["datasets"], status_code=200)
-async def new_dataset(user_id: str, data_name: str, data_sell: str, data_price: str):
+async def new_dataset(user_id: int, data_name: str, data_sell: bool, data_price: str):
     new_dataset = {}
     connect = requests.Session()
     data = {"username": "datahub", "password": "datahub"}
@@ -135,12 +135,13 @@ async def new_dataset(user_id: str, data_name: str, data_sell: str, data_price: 
             response = get_dataset(connect, dataset_type, name)
             type_list[dataset_type].append(response)
         new_dataset[dataset_type] = (type_list[dataset_type])
-    session.add(Dataset(name=data_name,
-                        status='pending',
-                        data=new_dataset,
-                        sell=data_sell,
-                        price=data_price,
-                        user_id=session.query(User).filter_by(id=user_id)))
+    dataset = session.add(Dataset(name=data_name,
+                                  status='pending',
+                                  data=new_dataset,
+                                  sell=data_sell,
+                                  price=data_price))
+    user = session.query(User).filter_by(id=user_id)
+    session.query(dataset).join(user)
     session.commit()
 
     return JSONResponse(status_code=status.HTTP_200_OK)
