@@ -5,4 +5,5 @@ RUN pip install -r /app/requirements.txt
 
 COPY . /app
 WORKDIR /app
-EXPOSE 8017
+EXPOSE 5555
+#8080

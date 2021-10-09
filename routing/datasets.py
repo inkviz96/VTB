@@ -15,7 +15,7 @@ async def dataset_list():
     Получение всех datasets
     """
     connect = await login()
-    generated_dataset = await join_dataset(connect, datasets=None)
+    generated_dataset = await join_dataset(connect)
     return JSONResponse(content=generated_dataset, status_code=status.HTTP_200_OK)
 
 
@@ -96,10 +96,7 @@ async def users_dataset_list():
     """
     Users Dataset list for sell
     """
-    try:
-        data_list = session.query(Dataset).all()
-    except:
-        session.rollback()
+    data_list = session.query(Dataset).all()
     print(data_list, flush=True)
     datasets = {}
     for data in data_list:
@@ -112,38 +109,12 @@ async def users_dataset_list():
         }
     return JSONResponse(content=datasets, status_code=status.HTTP_200_OK)
 
-# {
-#   "datasets": [
-#     {
-#       "name": "fct_users_created",
-#       "urn": "urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_created,PROD)",
-#       "fields": [
-#         "user_name"
-#       ]
-#     },
-#     {
-#       "name": "fct_users_deleted",
-#       "urn": "urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_deleted,PROD)",
-#       "fields": [
-#         "user_name",
-#         "timestamp"
-#       ]
-#     }
-#   ],
-#   "foreign_key": "user_id"
-# }
-
 
 @router.post("/new_dataset/", tags=["datasets"], status_code=200)
-async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
+async def new_dataset(mail: str, data_name: str, data_sell: bool, data_price: str):
     connect = await login()
-    datasets = {}
-    for dataset in data['datasets']:
-        datasets[dataset['urn'].split(':')[-1].split(',')[0]] = [dataset['urn'].split(':')[-1].split(',')[1]]
-    print(datasets)
-    generated_dataset = await join_dataset(connect, datasets=datasets)
-    print(generated_dataset)
-    dataset = session.add(Dataset(name='Some name',
+    generated_dataset = await join_dataset(connect)
+    dataset = session.add(Dataset(name=data_name,
                                   status='pending',
                                   data=generated_dataset,
                                   sell=data_sell,
@@ -165,24 +136,23 @@ async def login():
     return connect
 
 
-async def join_dataset(connect, datasets, user_tags=None):
+async def join_dataset(connect):
     """
     Объединение запрашиваемых dataset
     """
     result = {}
-    if not datasets:
-        datasets = {
-            'hive': ('SampleHiveDataset', 'fct_users_created', 'fct_users_deleted', 'logging_events'),
-            'hdfs': ('SampleHdfsDataset',),
-            'kafka': ('SampleKafkaDataset',)
-        }
+    datasets = {        # Будет формироваться исходя из данных с фронта
+        'hive': ('SampleHiveDataset', 'fct_users_created', 'fct_users_deleted', 'logging_events'),
+        'hdfs': ('SampleHdfsDataset',),
+        'kafka': ('SampleKafkaDataset',)
+    }
     for dataset_type, dataset_name in datasets.items():
         type_list = {dataset_type: []}
         for name in dataset_name:
             response = get_dataset(connect, dataset_type, name)
             is_suitable = await filter_by_tag(
                 dataset_tags=response["data"]["dataset"]["tags"],
-                user_tags=user_tags
+                user_tags=('test',)     # Тестовый вариант, теги будут приходить с фронта
             )
             if is_suitable:
                 type_list[dataset_type].append(response)

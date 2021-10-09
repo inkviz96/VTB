@@ -24,7 +24,7 @@ auth_token = ''
 router = APIRouter(prefix="/api/v1")
 
 
-@router.post("buy_request", status_code=200)
+@router.post("/buy_request/", status_code=200)
 async def buy_request(dataset_id: int, amount: int, user_id: int):
     token = auth_token
     client = Client(token)
