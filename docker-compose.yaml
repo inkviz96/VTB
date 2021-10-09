@@ -50,7 +50,7 @@ services:
       - .env
     command: bash -c "dramatiq scanner:broker"
     networks:
-      - main-chia
+      - main-vtb
   scheduler:
     container_name: vtb_scheduler
     build:
