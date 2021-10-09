@@ -9,7 +9,7 @@ import json
 router = APIRouter(prefix="/api/v1")
 
 
-@router.get("/dataset_list", tags=["datasets"], status_code=200)
+@router.get("/dataset_list/", tags=["datasets"], status_code=200)
 async def dataset_list():
     """
     Получение всех datasets
