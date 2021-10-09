@@ -98,7 +98,7 @@ async def create():
 
 
 @router.get("/users_dataset_list/", status_code=200)
-async def dataset_list():
+async def users_dataset_list():
     """
     Users Dataset list for sell
     """
