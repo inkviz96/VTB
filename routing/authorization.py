@@ -13,6 +13,7 @@ async def profile(mail: str):
     all_dataset = []
     for dataset in ds:
         all_dataset.append({
+            'id': dataset.id,
             'name': dataset.name,
             'url': dataset.url,
             'sell': dataset.sell,

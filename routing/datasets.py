@@ -9,6 +9,12 @@ import json
 router = APIRouter(prefix="/api/v1")
 
 
+@router.get("/dataset/{dataset_id}")
+async def dataset_info(dataset_id: int):
+    dataset = session.query(Dataset).filter_by(id=dataset_id)
+    return JSONResponse(content=dataset.data, status_code=status.HTTP_200_OK)
+
+
 @router.get("/dataset_delete/{dataset_name}", status_code=200)
 async def delete_dataset(dataset_name: str):
     dataset = session.query(Dataset).filter_by(name=dataset_name)
