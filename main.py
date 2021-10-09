@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from routing import authorization, datasets, shop
-# from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(openapi_url="/api/v1/openapi.json",
               redoc_url="/api/v1/redoc",
@@ -18,7 +18,7 @@ app = FastAPI(openapi_url="/api/v1/openapi.json",
 origins = [
     "https://0.0.0.0",
     "http://localhost",
-    "http://localhost:8017",
+    "http://localhost:5555",
 ]
 
 app.add_middleware(
