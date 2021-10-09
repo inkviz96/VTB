@@ -37,7 +37,7 @@ async def dataset_list():
     Получение всех datasets
     """
     connect = await login()
-    generated_dataset = await join_dataset(connect)
+    generated_dataset = await join_dataset(connect, datasets=None)
     return JSONResponse(content=generated_dataset, status_code=status.HTTP_200_OK)
 
 
