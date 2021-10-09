@@ -13,7 +13,7 @@ class Dataset(Base):
     url = Column(VARCHAR(255), nullable=False)
     sell = Column(BOOLEAN, nullable=False)
     price = Column(Integer, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
 
 
 class User(Base):

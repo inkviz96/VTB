@@ -25,6 +25,7 @@ async def profile(user_id: str):
 
 @router.get("/registration/{mail}", status_code=200)
 async def register(mail: str):
-    session.add(User(mail=mail))
-    session.commit()
+    if len(session.query(User).filter_by(mail=mail).first()) == 0:
+        session.add(User(mail=mail))
+        session.commit()
     return JSONResponse(status_code=status.HTTP_200_OK)
