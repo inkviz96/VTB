@@ -161,7 +161,10 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
-        datasets[dataset['urn'].split(':')[-1].split(',')[0]] = [dataset['urn'].split(':')[-1].split(',')[1]]
+        if not datasets[dataset['urn'].split(':')[-1].split(',')[0]]:
+            datasets[dataset['urn'].split(':')[-1].split(',')[0]] = [dataset['urn'].split(':')[-1].split(',')[1]]
+        else:
+            datasets[dataset['urn'].split(':')[-1].split(',')[0]].append([dataset['urn'].split(':')[-1].split(',')[1]])
     print(datasets)
     generated_dataset = await join_dataset(connect, datasets=datasets)
     print(generated_dataset)
