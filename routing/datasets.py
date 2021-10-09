@@ -140,12 +140,13 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
+        # Сплитим urn и достаем из них данные
         key = dataset['urn'].split(':')[-1].split(',')[0]
         value = dataset['urn'].split(':')[-1].split(',')[1]
         try:
             if datasets[key]:
                 datasets[key].append(value)
-        except:
+        except KeyError:
             datasets[key] = [value]
     print(datasets)
     generated_dataset = await join_dataset(connect, datasets=datasets)
