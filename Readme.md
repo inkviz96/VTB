@@ -11,6 +11,9 @@ docker-compose up -d --build
 - Sqlalchemy
 - Docker
 - Alembic
+- Rabbitmq
+- Dramatiq
+- Apscheduler
 
 ### Дополнительно
 Порт можно поменять в .env \

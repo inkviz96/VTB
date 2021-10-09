@@ -23,3 +23,12 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     mail = Column(VARCHAR(255), nullable=False)
+
+
+class Bill(Base):
+    __tablename__ = 'bill'
+
+    id = Column(Integer, primary_key=True)
+    receipt = Column(VARCHAR(255), nullable=False)
+    dataset_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)

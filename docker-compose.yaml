@@ -25,6 +25,48 @@ services:
     networks:
       - main-vtb
     restart: always
+  rabbitmq:
+    container_name: vtb_rabbitmq
+    image: rabbitmq:3.8.11
+    env_file: .env
+    restart: on-failure
+    ports:
+      - "${RABBITMQ_DEFAULT_PORT}:5672"
+      - "15672:15672"
+    networks:
+      - main-vtb
+  dramatiq:
+    container_name: vtb_dramatiq
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - rabbitmq
+    volumes:
+      - .:/app
+    restart: on-failure
+    env_file:
+      - .env
+    command: bash -c "dramatiq scanner:broker"
+    networks:
+      - main-chia
+  scheduler:
+    container_name: vtb_scheduler
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - dramatiq
+    volumes:
+      - .:/app
+    restart: on-failure
+    env_file:
+      - .env
+    command: python scanner.py
+    networks:
+      - main-vtb
 
 networks:
   main-vtb:
