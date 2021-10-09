@@ -9,13 +9,13 @@ import json
 router = APIRouter(prefix="/api/v1")
 
 
-@router.get("/dataset/{dataset_id}")
+@router.get("/dataset/{dataset_id}", tags=["datasets"], status_code=200)
 async def dataset_info(dataset_id: int):
     dataset = session.query(Dataset).filter_by(id=dataset_id)
     return JSONResponse(content=dataset.data, status_code=status.HTTP_200_OK)
 
 
-@router.get("/dataset_delete/{dataset_name}", status_code=200)
+@router.get("/dataset_delete/{dataset_name}", tags=["datasets"], status_code=200)
 async def delete_dataset(dataset_name: str):
     dataset = session.query(Dataset).filter_by(name=dataset_name)
     session.delete(dataset)
@@ -23,7 +23,7 @@ async def delete_dataset(dataset_name: str):
     return JSONResponse(content={"Deleted"}, status_code=status.HTTP_200_OK)
 
 
-@router.get("/dataset_change/{dataset_name}/{new_price}", status_code=200)
+@router.get("/dataset_change/{dataset_name}/{new_price}", tags=["datasets"], status_code=200)
 async def change_price_dataset(dataset_name: str, new_price: int):
     dataset = session.query(Dataset).filter_by(name=dataset_name)
     dataset.price = new_price
@@ -161,10 +161,12 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
-        if not datasets[dataset['urn'].split(':')[-1].split(',')[0]]:
+        try:
+            if datasets[dataset['urn'].split(':')[-1].split(',')[0]]:
+                datasets[dataset['urn'].split(':')[-1].split(',')[0]].append(
+                    [dataset['urn'].split(':')[-1].split(',')[1]][0])
+        except:
             datasets[dataset['urn'].split(':')[-1].split(',')[0]] = [dataset['urn'].split(':')[-1].split(',')[1]]
-        else:
-            datasets[dataset['urn'].split(':')[-1].split(',')[0]].append([dataset['urn'].split(':')[-1].split(',')[1]])
     print(datasets)
     generated_dataset = await join_dataset(connect, datasets=datasets)
     print(generated_dataset)
