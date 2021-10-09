@@ -5,6 +5,6 @@ class DataSets(BaseModel):
     id: int
     name: str
     url: str
-    stat
+    status: str
     sell: bool
     price: int

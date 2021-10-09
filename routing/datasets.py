@@ -1,3 +1,5 @@
+from typing import Dict, Any, List
+
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 import requests
@@ -113,3 +115,29 @@ async def users_dataset_list():
             'price': data.price
         }
     return JSONResponse(content=datasets, status_code=status.HTTP_200_OK)
+
+
+@router.get("/new_dataset/", tags=["datasets"], status_code=200)
+async def new_dataset(rules: json, user_id: str, data_name: str, data_sell: str, data_price: str):
+    new_dataset = {}
+    connect = requests.Session()
+    data = {"username": "datahub", "password": "datahub"}
+    connect.post("http://datahub.yc.pbd.ai:9002/logIn", json=data)
+    datasets = {**rules}
+    for dataset_type, dataset_name in datasets.items():
+        type_list = {dataset_type: []}
+        for name in dataset_name:
+            response = get_dataset(connect, dataset_type, name)
+            type_list[dataset_type].append(response)
+        new_dataset[dataset_type] = (type_list[dataset_type])
+    try:
+        session.add(Dataset(name=data_name,
+                            status='pending',
+                            data=new_dataset,
+                            sell=data_sell,
+                            price=data_price,
+                            user_id=user_id))
+        session.commit()
+    except:
+        session.rollback()
+    return JSONResponse(status_code=status.HTTP_200_OK)
