@@ -112,7 +112,10 @@ async def users_dataset_list():
     """
     Users Dataset list for sell
     """
-    data_list = session.query(Dataset).all()
+    try:
+        data_list = session.query(Dataset).all()
+    except:
+        session.rollback()
     print(data_list, flush=True)
     datasets = {}
     for data in data_list:

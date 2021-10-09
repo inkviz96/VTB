@@ -3,7 +3,7 @@ import random
 from fastapi import APIRouter, status, HTTPException
 from fastapi.responses import JSONResponse
 from database.db import session
-from database.models import Dataset, Bill
+from database.models import Bill
 from yoomoney import Authorize
 from yoomoney import Client
 from yoomoney import Quickpay
