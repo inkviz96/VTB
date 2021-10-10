@@ -23,7 +23,7 @@ async def delete_dataset(dataset_id: int):
     return JSONResponse(content={"Deleted"}, status_code=status.HTTP_200_OK)
 
 
-@router.get("/dataset_change/{dataset_name}/{new_price}", tags=["datasets"], status_code=200)
+@router.get("/dataset_change/{dataset_id}/{new_price}", tags=["datasets"], status_code=200)
 async def change_price_dataset(dataset_id: int, new_price: int):
     dataset = session.query(Dataset).filter_by(id=dataset_id).first()
     dataset.price = new_price
