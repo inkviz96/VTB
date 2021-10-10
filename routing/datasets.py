@@ -136,7 +136,7 @@ async def users_dataset_list():
 
 
 @router.post("/new_dataset/", tags=["datasets"], status_code=200)
-async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
+async def new_dataset(data_name: str, mail: str, data: dict, data_sell: bool, data_price: str):
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
@@ -152,7 +152,7 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     generated_dataset = await join_dataset(connect, datasets=datasets)
     print(generated_dataset)
     user = session.query(User).filter_by(mail=mail).first()
-    dataset = session.add(Dataset(name='Some name',
+    dataset = session.add(Dataset(name=data_name,
                                   status='pending',
                                   data=generated_dataset,
                                   sell=data_sell,
