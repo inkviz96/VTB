@@ -37,7 +37,7 @@ async def dataset_list():
     Получение всех datasets
     """
     connect = await login()
-    generated_dataset = await join_dataset(connect)
+    generated_dataset = await join_dataset(connect, datasets=None)
     return JSONResponse(content=generated_dataset, status_code=status.HTTP_200_OK)
 
 
@@ -134,39 +134,20 @@ async def users_dataset_list():
         }
     return JSONResponse(content=datasets, status_code=status.HTTP_200_OK)
 
-# {
-#   "datasets": [
-#     {
-#       "name": "fct_users_created",
-#       "urn": "urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_created,PROD)",
-#       "fields": [
-#         "user_name"
-#       ]
-#     },
-#     {
-#       "name": "fct_users_deleted",
-#       "urn": "urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_deleted,PROD)",
-#       "fields": [
-#         "user_name",
-#         "timestamp"
-#       ]
-#     }
-#   ],
-#   "foreign_key": "user_id"
-# }
-
 
 @router.post("/new_dataset/", tags=["datasets"], status_code=200)
 async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
+        # Сплитим urn и достаем из них данные
+        key = dataset['urn'].split(':')[-1].split(',')[0]
+        value = dataset['urn'].split(':')[-1].split(',')[1]
         try:
-            if datasets[dataset['urn'].split(':')[-1].split(',')[0]]:
-                datasets[dataset['urn'].split(':')[-1].split(',')[0]].append(
-                    [dataset['urn'].split(':')[-1].split(',')[1]][0])
-        except:
-            datasets[dataset['urn'].split(':')[-1].split(',')[0]] = [dataset['urn'].split(':')[-1].split(',')[1]]
+            if datasets[key]:
+                datasets[key].append(value)
+        except KeyError:
+            datasets[key] = [value]
     print(datasets)
     generated_dataset = await join_dataset(connect, datasets=datasets)
     print(generated_dataset)
