@@ -170,13 +170,14 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
     print(datasets)
     generated_dataset = await join_dataset(connect, datasets=datasets)
     print(generated_dataset)
+    user = session.query(User).filter_by(mail=mail).first()
     dataset = session.add(Dataset(name='Some name',
                                   status='pending',
                                   data=generated_dataset,
                                   sell=data_sell,
-                                  price=data_price))
-    user = session.query(User).filter_by(mail=mail)
-    session.query(dataset).join(user)
+                                  price=data_price,
+                                  user_pk=user.id))
+
     session.commit()
 
     return JSONResponse(status_code=status.HTTP_200_OK)

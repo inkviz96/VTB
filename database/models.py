@@ -15,7 +15,7 @@ class Dataset(Base):
     data = Column(JSON, nullable=False)
     sell = Column(BOOLEAN, nullable=False)
     price = Column(Integer, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_pk = Column(Integer, ForeignKey('user.id'))
 
 
 class User(Base):

@@ -47,7 +47,7 @@ async def buy_request(dataset_id: int, amount: int, user_id: int):
         sum=amount,
         label=receipt
     )
-    session.add(Bill(receipt=receipt, dataset_id=dataset_id, user_id=user_id))
+    session.add(Bill(receipt=receipt, dataset_id=dataset_id, user_pk=user_id))
     session.commit()
     return JSONResponse(content={'redirected_url': quickpay.redirected_url, 'base_url': quickpay.base_url},
                         status_code=status.HTTP_200_OK)

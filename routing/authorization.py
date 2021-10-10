@@ -9,13 +9,18 @@ router = APIRouter(prefix="/api/v1")
 @router.get("/profile/{mail}/", tags=["authorization"], status_code=200)
 async def profile(mail: str):
     user = session.query(User).filter_by(mail=mail).first()
-    ds = session.query(Dataset).filter_by(user_id=int(user.id))
+    s = session.query(Dataset).all()
+    for x in s:
+        print(x.user_pk)
+    ds = session.query(Dataset).filter(Dataset.user_pk == user.id).all()
+    print(ds)
     all_dataset = []
     for dataset in ds:
         all_dataset.append({
             'id': dataset.id,
             'name': dataset.name,
-            'url': dataset.url,
+            'status': dataset.status,
+            'data': dataset.data,
             'sell': dataset.sell,
             'price': dataset.price
         })
