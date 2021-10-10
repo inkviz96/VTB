@@ -8,6 +8,11 @@ router = APIRouter(prefix="/api/v1")
 
 @router.get("/profile/{mail}/", tags=["authorization"], status_code=200)
 async def profile(mail: str):
+    """
+    User profile with list users datasets
+    :param mail: user mail
+    :return: json dataset list
+    """
     user = session.query(User).filter_by(mail=mail).first()
     s = session.query(Dataset).all()
     for x in s:
@@ -32,6 +37,11 @@ async def profile(mail: str):
 
 @router.get("/registration/{mail}/", tags=["authorization"], status_code=200)
 async def register(mail: str):
+    """
+    Register new user
+    :param mail: user mail
+    :return:
+    """
     session.add(User(mail=mail))
     session.commit()
     return JSONResponse(status_code=status.HTTP_200_OK)

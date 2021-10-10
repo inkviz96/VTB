@@ -51,6 +51,7 @@ async def change_price_dataset(dataset_id: int, new_price: int):
 async def dataset_list():
     """
     Получение всех datasets
+    :return: json
     """
     connect = await login()
     generated_dataset = await join_dataset(connect, datasets=None)
@@ -119,6 +120,7 @@ def get_dataset(connect, dataset_type: str, dataset_name: str):
 async def users_dataset_list():
     """
     Users Dataset list for sell
+    :return: {"dataset_list": datasets info}
     """
     try:
         data_list = session.query(Dataset).all()
