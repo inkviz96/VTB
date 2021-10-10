@@ -11,12 +11,22 @@ router = APIRouter(prefix="/api/v1")
 
 @router.get("/dataset/{dataset_id}", tags=["datasets"], status_code=200)
 async def dataset_info(dataset_id: int):
+    """
+    Datasets JSON data
+    :param dataset_id: id dataset
+    :return: Json dataset data
+    """
     dataset = session.query(Dataset).filter_by(id=dataset_id).first()
     return JSONResponse(content=dataset.data, status_code=status.HTTP_200_OK)
 
 
 @router.get("/dataset_delete/{dataset_id}", tags=["datasets"], status_code=200)
 async def delete_dataset(dataset_id: int):
+    """
+    Delete dataset
+    :param dataset_id: id dataset
+    :return: {"Deleted": dataset id}
+    """
     dataset = session.query(Dataset).filter_by(id=dataset_id).first()
     session.delete(dataset)
     session.commit()
@@ -25,6 +35,12 @@ async def delete_dataset(dataset_id: int):
 
 @router.get("/dataset_change/{dataset_id}/{new_price}", tags=["datasets"], status_code=200)
 async def change_price_dataset(dataset_id: int, new_price: int):
+    """
+    Delete dataset
+    :param dataset_id: id dataset
+    :param new_price: New price dataset
+    :return: {"Price change": new price}
+    """
     dataset = session.query(Dataset).filter_by(id=dataset_id).first()
     dataset.price = new_price
     session.commit()
@@ -99,20 +115,6 @@ def get_dataset(connect, dataset_type: str, dataset_name: str):
     return json.loads(response.text)
 
 
-@router.post("/create/", tags=["datasets"], status_code=200)
-async def create():
-    """
-    Create testing users datasets
-    """
-    for x in range(10):
-        try:
-            session.add(Dataset(name='name', status='Done/', data={'some': 'json'}, sell=True, price=x))
-            session.commit()
-        except:
-            session.rollback()
-    return JSONResponse(status_code=status.HTTP_200_OK)
-
-
 @router.get("/users_dataset_list/", tags=["datasets"], status_code=200)
 async def users_dataset_list():
     """
@@ -122,21 +124,30 @@ async def users_dataset_list():
         data_list = session.query(Dataset).all()
     except:
         session.rollback()
-    print(data_list, flush=True)
-    datasets = {}
+    datasets = []
     for data in data_list:
-        datasets[data.id] = {
-            'name': data.name,
-            'status': data.status,
-            'data': data.data,
-            'sell': data.sell,
-            'price': data.price
-        }
-    return JSONResponse(content=datasets, status_code=status.HTTP_200_OK)
+        datasets.append(
+            {'id': data.id,
+             'name': data.name,
+             'status': data.status,
+             'data': data.data,
+             'sell': data.sell,
+             'price': data.price})
+
+    return JSONResponse(content={"dataset_list": datasets}, status_code=status.HTTP_200_OK)
 
 
 @router.post("/new_dataset/", tags=["datasets"], status_code=200)
 async def new_dataset(data_name: str, mail: str, data: dict, data_sell: bool, data_price: str):
+    """
+    Create new user dataset
+    :param data_name: Name new dataset
+    :param mail: User mail
+    :param data: Rules for creating new dataset
+    :param data_sell: Sell or not this dataset
+    :param data_price: Price new dataset
+    :return:
+    """
     connect = await login()
     datasets = {}
     for dataset in data['datasets']:
