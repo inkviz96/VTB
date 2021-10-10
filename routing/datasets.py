@@ -27,9 +27,12 @@ async def delete_dataset(dataset_id: int):
     :param dataset_id: id dataset
     :return: {"Deleted": dataset id}
     """
-    dataset = session.query(Dataset).filter_by(id=dataset_id).first()
-    session.delete(dataset)
-    session.commit()
+    try:
+        dataset = session.query(Dataset).filter_by(id=dataset_id).first()
+        session.delete(dataset)
+        session.commit()
+    except:
+        session.rollback()
     return JSONResponse(content={"Deleted": dataset.id}, status_code=status.HTTP_200_OK)
 
 
@@ -41,9 +44,12 @@ async def change_price_dataset(dataset_id: int, new_price: int):
     :param new_price: New price dataset
     :return: {"Price change": new price}
     """
-    dataset = session.query(Dataset).filter_by(id=dataset_id).first()
-    dataset.price = new_price
-    session.commit()
+    try:
+        dataset = session.query(Dataset).filter_by(id=dataset_id).first()
+        dataset.price = new_price
+        session.commit()
+    except:
+        session.rollback()
     return JSONResponse(content={"Price change": dataset.price}, status_code=status.HTTP_200_OK)
 
 
