@@ -3,4 +3,4 @@
  *.pyc
  env/
  routing/__pycache__/
- alembic/versions/*
+ alembic/versions/
