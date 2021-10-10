@@ -161,7 +161,7 @@ async def new_dataset(mail: str, data: dict, data_sell: bool, data_price: str):
 
     session.commit()
 
-    return JSONResponse(status_code=status.HTTP_200_OK)
+    return JSONResponse(content=dataset, status_code=status.HTTP_200_OK)
 
 
 async def login():
